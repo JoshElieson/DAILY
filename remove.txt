@@ -1,0 +1,165 @@
+DAILY — FEATURES TO CONSIDER REMOVING
+=====================================
+Reviewed: 2026-06-14
+Scope: the full Expo app (all 16 routes in src/app + supporting feature modules).
+Lens: the "average user" of Daily — someone who wants a calm, effortless, AI-written
+daily ritual. The app's own positioning pillars are Personal · Fresh · Calm · Effortless,
+and the core loop is: write one intent -> Claude writes fresh content each day -> it
+arrives as a gentle notification. Every feature below is weighed against that loop.
+
+I did NOT change any code. This file is the only output. Items are grouped by how
+confident I am that the average user neither needs nor wants them.
+
+
+-------------------------------------------------------------------------------
+TIER 1 — STRONG CANDIDATES (dead, non-functional, or pure friction)
+-------------------------------------------------------------------------------
+
+1. ACCOUNTS / SIGN IN / SIGN UP  (whole (auth) flow)
+   Where: src/app/(auth)/sign-in.tsx, src/app/(auth)/sign-up.tsx,
+          src/app/(auth)/_layout.tsx, "I already have an account" on the onboarding
+          Welcome screen, Sign in/out rows in Settings and Profile, the AuthProvider.
+   Why remove: The app is local-first and anonymous by design — the master spec lists
+   "No account/login (anonymous device ID only)" as an explicit v1 non-goal (§2.7).
+   These screens are fully MOCKED: email/password and "Continue with Apple" just flip a
+   local flag; no data syncs, nothing is gated behind being signed in, and your content
+   stays on the device either way. So the account is friction with zero payoff — it asks
+   the average user for an email + password to unlock nothing. Real accounts only matter
+   in the deferred cloud-sync phase. Until then, drop the sign-in/up screens, the
+   "I already have an account" button, and the sign-in/out rows.
+
+2. "WEEK STARTS ON" SETTING  (Sunday / Monday)
+   Where: src/app/(tabs)/settings.tsx (General group), SettingsProvider `weekStart`.
+   Why remove: It's a dead control. The MVP has no weekly calendar, no week grid, no
+   insights-by-week view — nothing in the UI is affected by where the week starts. The
+   average user toggles it, sees no change anywhere, and is mildly confused. Pure
+   settings clutter.
+
+3. REGENERATE / "GIVE ME ANOTHER"  (Plus-gated)
+   Where: src/app/item/[id].tsx — the RefreshCw icon button + "Regenerate — Daily Plus"
+          button on every content card.
+   Why remove: The spec lists regenerate as post-MVP, and it works against the brand.
+   Daily's whole promise is "we wrote today's content for you" — a prominent Regenerate
+   button invites the user to reject that and reroll, which (a) undermines trust in the
+   one thing the product does, (b) trains users to gamble for a "better" result, and
+   (c) drives Claude cost. Most users won't want it; the ones who do are power users. Keep
+   the auto-generate-on-open fallback, drop the manual reroll button.
+
+4. PROFILE SCREEN  (separate /profile route)
+   Where: src/app/profile.tsx, reached from the avatar on Today and the header row in
+          Settings.
+   Why remove: With no real account, this page mostly duplicates Settings — identity
+   (always "Guest"), a "Your practice" snapshot (active reminders / streak / Free-vs-
+   Premium), and a privacy link. All of that either lives in Settings already or is a
+   one-line stat. A dedicated profile page is account-app furniture; for an anonymous
+   local app it's an empty room. Fold the one useful bit (subscription status) into
+   Settings and remove the route + the avatar tap target on Today.
+
+
+-------------------------------------------------------------------------------
+TIER 2 — MODERATE CANDIDATES (bloat, redundancy, or off-brand)
+-------------------------------------------------------------------------------
+
+5. "UPCOMING" TAB  (4th tab, with All / Active / Paused filter)
+   Where: src/app/(tabs)/upcoming.tsx, the tab entry in (tabs)/_layout.tsx.
+   Why remove: The free tier caps active Dailies at 3 (items/limits.ts). A dedicated
+   tab — plus a status segmented control — to list as few as 1-3 items is heavy nav for
+   little value. The Today screen already shows what's scheduled; an "Upcoming" overview
+   and the Active/Paused filter are power-user / many-reminders concepts that the average
+   user (1-3 calm Dailies) will rarely open. Dropping it takes nav from 4 tabs to a
+   cleaner 3 (Today · Reflect · Settings).
+
+6. MANUAL REFLECTION COMPOSER inside the Reflect tab
+   Where: src/app/(tabs)/reflect.tsx — the "Write a reflection" TextField + Save, plus
+          the "Recent reflections" history and the Premium history teaser.
+   Why remove (or at least reconsider): This is a different product bolted on. Daily's
+   wedge is "AI writes FOR you"; a free-text journaling box asks the user to write
+   themselves — which is exactly the effort the app says it removes ("Effortless"), and
+   it overlaps the existing "Journaling" content type that already generates prompts. The
+   average user came to NOT author content. Keep the gentle evening reflection PROMPT as a
+   calm touchpoint; the writeable journal + saved-history + premium-history-upsell stack
+   is scope creep toward a journaling app.
+
+7. STREAKS as a foreground mechanic  (flame count, "best N", Show-streaks toggle)
+   Where: src/app/(tabs)/reflect.tsx (flame + day-streak + best), Profile "Day streak",
+          Settings "Show streaks" toggle, items/streaks.ts.
+   Why reconsider: The brand is explicitly "calm, never gamified, no red badges shouting."
+   A streak counter is the textbook gamification/loss-aversion mechanic — it quietly tells
+   calm-seeking users they're "failing" on a missed day. The fact that there's even a
+   "Show streaks" toggle signals the team is ambivalent. For the average calm-ritual user
+   this adds pressure the brand promises to avoid. At minimum drop the "best streak" and
+   the toggle; consider dropping the prominent flame entirely.
+
+8. CONTENT-TYPE SPRAWL — trim "Micro-story" and "Learning drip"
+   Where: src/features/items/metadata.ts (7 types: reflection, motivation, habit, story,
+          journal, learning, custom), shown as chips in create + onboarding.
+   Why trim: Seven chips is a lot of upfront choice for a "just tell us what you need" app.
+   Two of them sit outside the calm self-improvement core the app is positioned against
+   (Stoic / Finch / I Am / Calm): "Micro-story" (bedtime sci-fi) and "Learning drip" (one
+   Spanish phrase/day) are fun but tangential, and "Learning" implies structured-course
+   expectations a daily one-liner won't meet. The average user wants reflection,
+   motivation, habit nudge, journaling. Trimming to ~4 types + Custom keeps the create
+   sheet calmer and the brand focused.
+
+9. HOME-SCREEN QUICK THEME TOGGLE  (sun/moon button on Today)
+   Where: src/app/(tabs)/index.tsx header (IconButton that flips light/dark).
+   Why remove: Appearance already lives in Settings (System/Light/Dark, the correct home
+   for it, and the one that respects "System"). A second always-on toggle in the Today
+   header is redundant chrome on the screen that should be the calmest in the app, and it
+   hard-overrides the System setting with one tap. Average users set theme once; they
+   don't need it on the home bar.
+
+
+-------------------------------------------------------------------------------
+TIER 3 — MINOR / POLISH (low stakes, mention for completeness)
+-------------------------------------------------------------------------------
+
+10. BADGE-COUNT SETTING
+    Where: SettingsProvider `badgeCount` (defaults off) — note it isn't even rendered as
+    a row in Settings.
+    Why remove: It's a stored preference with no UI surface and no average-user demand
+    (app-icon badges are off-brand here anyway). Dead field.
+
+11. ONBOARDING SWIPE-TO-ADVANCE GESTURE
+    Where: src/app/onboarding.tsx (Gesture.Pan swipe left/right between steps).
+    Why reconsider: A nicety nobody asks for that adds real complexity (gesture vs scroll
+    conflict handling). The Continue/Back buttons already do the job. Low harm if kept,
+    but it's effort with no average-user payoff.
+
+12. "WELCOME — I ALREADY HAVE AN ACCOUNT" + AVATAR/NAME GREETING
+    Where: onboarding Welcome footer; Today greeting uses user.name; avatar everywhere.
+    Why: All downstream of item #1 (accounts). With anonymous-only, the personalized
+    name/avatar requires a sign-up that buys nothing, and the greeting is just "Guest."
+    Remove alongside accounts, or greet by time-of-day only.
+
+
+-------------------------------------------------------------------------------
+NOT RECOMMENDED FOR REMOVAL (core — listed so the line is explicit)
+-------------------------------------------------------------------------------
+- Onboarding (welcome -> intention -> live first generation -> permission): the core
+  activation moment.
+- Create a Daily (intent + type + time + frequency + reminder toggle): the core action.
+- Today screen + content cards + mark-done/completion: the daily payoff.
+- Item detail (today's content + history) and Edit / Pause / Delete: table stakes.
+- Local notifications: the delivery mechanism the whole product depends on.
+- Premium paywall + Restore/Terms/Privacy links: the monetization (and Restore/links are
+  App Store requirements — never gate Restore).
+- Core Settings: Notifications, Appearance, Default time; About (Rate, Support, Privacy,
+  Version).
+
+
+-------------------------------------------------------------------------------
+SUMMARY (highest-impact removals first)
+-------------------------------------------------------------------------------
+1. Accounts / sign-in / sign-up (friction, non-functional, off-spec for MVP)
+2. "Week starts on" setting (dead control)
+3. Regenerate button (off-brand, post-MVP, cost driver)
+4. Profile screen (duplicates Settings)
+5. Upcoming tab (overkill at 1-3 Dailies -> 4 tabs become 3)
+6. Manual reflection composer (different product; overlaps Journaling type)
+7. Streaks as a loud mechanic (conflicts with the "calm, not gamified" brand)
+8. Trim content types (drop Micro-story + Learning drip)
+9. Home-screen quick theme toggle (redundant with Settings)
+10-12. Badge-count field, onboarding swipe gesture, account-dependent name/avatar chrome
+</content>
+</invoke>

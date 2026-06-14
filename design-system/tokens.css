@@ -1,0 +1,194 @@
+/* ============================================================
+   Daily — Design Tokens (CSS custom properties)
+   Drop into your global stylesheet. Light is default; dark is
+   applied via [data-theme="dark"] or prefers-color-scheme.
+   Build components against semantic tokens, never raw ramps.
+   ============================================================ */
+
+:root {
+  /* ---- Ramps: Sand (warm neutral) ---- */
+  --sand-50:  #FAF7F2;
+  --sand-100: #F2ECE3;
+  --sand-200: #E7DCCF;
+  --sand-300: #D6C8B6;
+  --sand-400: #B6A48C;
+  --sand-500: #94806A;
+  --sand-600: #6F5D49;
+  --sand-700: #4E4032;
+  --sand-800: #332A20;
+  --sand-900: #211B14;
+  --sand-950: #15110C;
+
+  /* ---- Ramps: Clay (primary accent) ---- */
+  --clay-50:  #FBF1ED;
+  --clay-100: #F6DDD2;
+  --clay-200: #EDBFAE;
+  --clay-300: #E29C82;
+  --clay-400: #D67C5C;
+  --clay-500: #C75F3D;
+  --clay-600: #AA4B2D;
+  --clay-700: #883A23;
+  --clay-800: #65301E;
+  --clay-900: #46241A;
+
+  /* ---- Ramps: Sage (secondary accent) ---- */
+  --sage-50:  #EFF3EC;
+  --sage-100: #DCE6D4;
+  --sage-200: #C1D2B5;
+  --sage-300: #A0B891;
+  --sage-400: #7F9A6C;
+  --sage-500: #62804F;
+  --sage-600: #4D663E;
+  --sage-700: #3B4F30;
+  --sage-800: #2C3B25;
+  --sage-900: #1F291A;
+
+  /* ---- Ramps: Dusk (tertiary / dark anchor) ---- */
+  --dusk-50:  #EEF0F6;
+  --dusk-100: #DBDFEC;
+  --dusk-200: #BCC3DA;
+  --dusk-300: #969FC2;
+  --dusk-400: #6F7AA6;
+  --dusk-500: #525C87;
+  --dusk-600: #3F4769;
+  --dusk-700: #2E3450;
+  --dusk-800: #21263B;
+  --dusk-900: #171B2B;
+  --dusk-950: #0F1220;
+
+  /* ---- Functional ---- */
+  --amber-500: #C98A2B;
+  --amber-300: #E0AE5C;
+  --rose-500:  #B4473E;
+  --rose-300:  #E08980;
+
+  /* ====================================================
+     SEMANTIC TOKENS — LIGHT (default)
+     ==================================================== */
+  --color-bg:              var(--sand-50);
+  --color-surface:         #FFFFFF;
+  --color-surface-sunken:  var(--sand-100);
+  --color-border:          var(--sand-200);
+  --color-border-strong:   var(--sand-300);
+
+  --color-text:            var(--sand-900);
+  --color-text-secondary:  var(--sand-500);
+  --color-text-muted:      var(--sand-400);
+  --color-text-on-accent:  var(--sand-50);
+
+  --color-accent:          var(--clay-500);
+  --color-accent-hover:    var(--clay-400);
+  --color-accent-pressed:  var(--clay-600);
+  --color-accent-tint:     var(--clay-50);
+  --color-accent-tint-2:   var(--clay-100);
+
+  --color-success:         var(--sage-500);
+  --color-success-tint:    var(--sage-100);
+  --color-warning:         var(--amber-500);
+  --color-error:           var(--rose-500);
+  --color-info:            var(--dusk-500);
+
+  --color-focus-ring:      rgba(214, 124, 92, 0.40); /* clay-400 @ 40% */
+  --color-scrim:           rgba(33, 27, 20, 0.40);   /* sand-900 @ 40% */
+
+  /* ---- Typography ---- */
+  --font-serif: "Tiempos Text", "Newsreader", "Source Serif 4", Georgia, serif;
+  --font-sans:  "Inter", -apple-system, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+
+  --text-display-xl: 400 40px/46px var(--font-serif);
+  --text-display-l:  400 32px/40px var(--font-serif);
+  --text-title:      400 26px/34px var(--font-serif);
+  --text-heading:    600 20px/28px var(--font-sans);
+  --text-subheading: 600 17px/24px var(--font-sans);
+  --text-body-l:     400 17px/26px var(--font-sans);
+  --text-body:       400 15px/23px var(--font-sans);
+  --text-label:      500 14px/20px var(--font-sans);
+  --text-caption:    500 13px/18px var(--font-sans);
+  --text-overline:   600 12px/16px var(--font-sans);
+  --text-numeral:    400 48px/52px var(--font-serif);
+
+  /* ---- Spacing (4px base) ---- */
+  --space-0: 2px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 40px;
+  --space-9: 56px;
+  --space-10: 72px;
+
+  /* ---- Radius ---- */
+  --radius-sm:   10px;
+  --radius-md:   14px;
+  --radius-lg:   20px;
+  --radius-xl:   28px;
+  --radius-2xl:  36px;
+  --radius-full: 999px;
+
+  /* ---- Elevation (warm-tinted) ---- */
+  --elevation-0: none;
+  --elevation-1: 0 1px 2px rgba(33,27,20,.04), 0 1px 3px rgba(33,27,20,.06);
+  --elevation-2: 0 4px 12px rgba(33,27,20,.06), 0 2px 4px rgba(33,27,20,.04);
+  --elevation-3: 0 12px 32px rgba(33,27,20,.10), 0 4px 8px rgba(33,27,20,.05);
+  --elevation-4: 0 24px 60px rgba(33,27,20,.16);
+
+  /* ---- Motion ---- */
+  --motion-fast: 120ms;
+  --motion-base: 220ms;
+  --motion-slow: 360ms;
+  --ease-out-soft:    cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-soft: cubic-bezier(0.45, 0, 0.25, 1);
+}
+
+/* ====================================================
+   SEMANTIC TOKENS — DARK (Ink Dusk)
+   ==================================================== */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { color-scheme: dark; }
+}
+
+[data-theme="dark"],
+:root[data-theme="dark"] {
+  --color-bg:              var(--dusk-900);
+  --color-surface:         var(--dusk-800);
+  --color-surface-sunken:  var(--dusk-950);
+  --color-border:          rgba(255,255,255,0.08);
+  --color-border-strong:   rgba(255,255,255,0.16);
+
+  --color-text:            #F3F1EC;
+  --color-text-secondary:  var(--dusk-200);
+  --color-text-muted:      var(--dusk-300);
+  --color-text-on-accent:  #FBF6F2;
+
+  --color-accent:          var(--clay-400);
+  --color-accent-hover:    var(--clay-300);
+  --color-accent-pressed:  var(--clay-500);
+  --color-accent-tint:     rgba(214,124,92,0.16);
+  --color-accent-tint-2:   rgba(214,124,92,0.24);
+
+  --color-success:         var(--sage-300);
+  --color-success-tint:    rgba(160,184,145,0.18);
+  --color-warning:         var(--amber-300);
+  --color-error:           var(--rose-300);
+  --color-info:            var(--dusk-300);
+
+  --color-focus-ring:      rgba(226,156,130,0.50); /* clay-300 @ 50% */
+  --color-scrim:           rgba(8, 10, 18, 0.60);
+
+  --elevation-1: 0 1px 2px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.04);
+  --elevation-2: 0 6px 16px rgba(0,0,0,.36), inset 0 1px 0 rgba(255,255,255,.04);
+  --elevation-3: 0 16px 40px rgba(0,0,0,.46), inset 0 1px 0 rgba(255,255,255,.05);
+  --elevation-4: 0 28px 70px rgba(0,0,0,.55);
+}
+
+/* Honor reduced motion globally */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-fast: 1ms;
+    --motion-base: 1ms;
+    --motion-slow: 1ms;
+  }
+}
